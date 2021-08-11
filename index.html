@@ -1,0 +1,126 @@
+<!DOCTYPE>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Приэльбрусье</title>
+        <link rel="stylesheet" href="style.css"/>
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+        integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+        crossorigin=""/>
+
+        <script type="text/javascript" srs="main.js"></script>
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+        <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+        integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+        crossorigin=""></script>
+    </head>
+    <body>
+        <header>
+        </header>
+
+        <div class="cg-map" title="cg-map">
+            <div id="map">
+                <script type="text/javascript">
+                    var map = L.map('map').setView([43.255951, 42.512950], 15);
+                    L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+                        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+                        maxZoom: 18,
+                        id: 'mapbox/streets-v11',
+                        tileSize: 512,
+                        zoomOffset: -1,
+                        accessToken: 'pk.eyJ1Ijoid2VlcHppcCIsImEiOiJja3MxdnF1aTExeG51MzJzN2Y1N3g1cmZjIn0.VJciVUTVQGi_8_el9x2maQ'
+                    }).addTo(map);
+
+                    /*var marker = L.marker([43.255951, 42.512950]).addTo(map);*/
+
+                    var circle = L.circle([43.255951, 42.512950], {
+                        color: 'red',
+                        fillColor: '#f03',
+                        fillOpacity: 0.5,
+                        radius: 500
+                    }).addTo(map);
+
+                    var polygon = L.polygon([
+                        [43, 42],
+                        [42, 43],
+                        [43, 43]
+                    ]).addTo(map);
+
+                    /*marker.bindPopup("<b>Hello, World!</b><br>This's Terskol'")*/
+
+                    var popup = L.popup()
+
+                    function onMapClick(e) {
+                        popup
+                            .setLatLng(e.latlng)
+                            .setContent("You clicked the map at " + e.latlng)
+                            .openOn(map);
+                    }
+                    map.on('click', onMapClick);
+
+
+
+
+                    $.ajax({
+                        type: "GET",
+                        url: "hotels.json",
+                        dataType: "json",
+                        success: function(data) {processData(data);}
+                    });
+
+                    function processData(allText) {
+                        var allTextLines = allText.split(/\r\n|\n/);
+                        var headers = allTextLines[0].split(';');
+                        var lines = [];
+
+                        for (var i = 1; i < allTextLines.length; i++){
+                            var data = allTextLines[i].split(';');
+                            if (data.length == header.length) {
+                                var tarr = [];
+                                for (var j = 0; j < headers.length; j++){
+                                    tarr.push(headers[j] + ":" + data[j])
+                                }
+                                lines.push(tarr);
+                            }
+                        }
+                        console.log(lines);
+                    }
+
+                    let markersList = [];
+                    markersList = [[43.259158, 42.502869, "Альпхаус"],
+                                [43.258687, 42.506394, "Седьмой регион"],
+                                [43.258089, 42.507231, "Маша и Медведи"],
+                                [3.257921, 42.509804, "Шахеризада"],
+                                [43.257626, 42.510379, "Гостевой дом на Эльбрусской 2"],
+                                [43.257201, 42.510537, "Эверест"]
+                              ];
+
+                    for (var i = 0; i < markersList.length; i++) {
+                        hotelName = markersList[i][2];
+                        map.addLayer(new L.marker([markersList[i][0], markersList[i][1]])
+                            .bindPopup("<b>" + hotelName + "</b><br><a href='https:www.yandex.ru'>Я подсказка</a><br><img height='50px' width='50px' src='unnamed.png'/>"));
+                    };
+                </script>
+
+            </div>
+        </div>
+        <nav>
+            <!--<div class="block1">
+            <h1>Заголовок</h1>
+            <p>Текст</p>
+            </div>
+            <div class="block1">
+            <h1>Заголовок</h1>
+            <p>Текст</p>
+            </div>
+            <div class="block1">
+            <h1>Заголовок</h1>
+            <p>Текст</p>
+            </div> -->
+        </nav>
+
+        <footer>
+            <p><small>&#169 Сopyright Все права защищены Автор: Владислав Корякин</small></p>
+        </footer>
+    </body>
+</html>

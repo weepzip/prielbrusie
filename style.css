@@ -1,0 +1,54 @@
+body {
+background: #fa8e47;
+margin: 0px;
+}
+header {
+background: #3333ff;
+height: 10%;
+width: 100%;
+margin: 0px;
+border-bottom: solid 1px #111188;
+}
+footer {
+background: black;
+height: 5%;
+width: 100%;
+position: absolute;
+bottom: 0%;
+margin: 0px;
+border-top: solid 1px white;
+color: white;
+}
+nav {
+position: absolute;
+margin: 5 0 5 5px;
+left: 0%;
+width: 28%;
+height: 83%;
+background: #aa4499;
+border: solid 1px black;
+}
+.block1 {
+position: relative;
+width: 94%;
+height: 100px;
+margin: 5px;
+background: #d0d;
+border: solid 1px black;
+float: left;
+padding: 5px;
+}
+.cg-map {
+position: absolute;
+right: 0%;
+width: 70%;
+height: 83%;
+margin: 5px;
+border: solid 1px black;
+float: right;
+background: green;
+}
+#map {
+height: 100%;
+width: 100%;
+}
