@@ -18,6 +18,7 @@
         "hotels":
         [
             {
+                "type": "Feature"
                 "name": "Альпхаус",
                 "geometry": {
                     "type": "Point",
