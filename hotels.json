@@ -19,8 +19,10 @@
         [
             {
                 "name": "Альпхаус",
-                "coordinates": [43.25915900,42.50286300],
-                "type": "Point",
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [43.25915900,42.50286300]
+                },
                 "address": "Терскол, А-158",
                 "description":
                 [
