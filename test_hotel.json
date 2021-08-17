@@ -1,6 +1,7 @@
 {
     "type": "FeatureCollection",
-    "features":[{
+    "features":[
+        {
             "type": "Feature",
             "geometry": {
                 "type": "Point",
@@ -12,6 +13,56 @@
                     "Отель Alphouse Azau с прямым доступом к лыжным склонам расположен в поселке Новый Кругозор. К услугам гостей принадлежности для барбекю, мини-кухня и собственная ванная комната. К услугам гостей бесплатный Wi-Fi и парковка.",
                     "Все номера оснащены чайником. Номера оснащены шкафом и телевизором с плоским экраном. В некоторых номерах есть балкон. Номера оснащены микроволновой печью.",
                     "В окрестностях можно заняться различными видами активного отдыха, в том числе лыжным спортом и пешим туризмом."]}
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [43.258687, 42.506394]},
+            "properties":{
+                "name": "Седьмой регион",
+                "address": "",
+                "description":[""]}
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [43.25613128, 42.51553148]},
+            "properties":{
+                "name": "Эльбрусия",
+                "address": "",
+                "description":[""]}
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [43.25770884, 42.51023992]},
+            "properties":{
+                "name": "Эверест",
+                "address": "",
+                "description":[""]}
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [43.25755337, 42.51268566]},
+            "properties":{
+                "name": "Kemp Mini-hotel",
+                "address": "",
+                "description":[""]}
+        },
+        {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [43.25711400, 42.51399800]},
+            "properties":{
+                "name": "Moon Hotel",
+                "address": "",
+                "description":[""]}
         }
     ]
 }
