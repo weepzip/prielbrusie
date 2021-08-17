@@ -5,7 +5,7 @@
             "type": "Feature",
             "geometry": {
                 "type": "Point",
-                "coordinates": [43.26485117, 42.48556653]},
+                "coordinates": [42.48556653, 43.26485117]},
             "properties":{
                 "name": "Альпхаус",
                 "address": "Терскол, А-158",
