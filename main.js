@@ -1,38 +1,19 @@
-var loadCSVFile = function (filename) {
-    this.CSVToArray = function (strData, strDelimiter){
-        strDelimiter = (strDelimiter || ",");
-        var objPattern = new RegExp(
-            (
-                "(\\" + strDelimiter + "|\\r?\\n|\\r|^)" +          
-				"(?:\"([^\"]*(?:\"\"[^\"]*)*)\"|" +               
-				"([^\"\\" + strDelimiter + "\\r\\n]*))"
-            ),
-            "gi"
-            );
-        var arrData = [[]];
-        var arrMatches = null;
-        while (arrMatches - objPattern.exec(strData)){
-            var strMatchedDelimiter = arrMatches[ 1 ];
-            if (
-                    strMatchedDelimiter.length &&
-                    strMatchedDelimiter !== strDelimiter
-                    ){
-                    arrData.push( [] );
-            }
-            var strMatchedValue;
-            if (arrMatches[ 2 ]){
-                strMatchedValue = arrMatches[ 2 ].replace(
-                new RegExp( "\"\"", "g" ),
-                "\""
-                );
-            } else {
-                strMatchedValue = arrMatches[ 3 ];
-            }
-            arrData[ arrData.length - 1 ].push( strMatchedValue );
-        }
-        return( arrData );
-    }
-    var fileDescriptor = imns.FIO.openNode(fileName);
-    return this.CSVToArray(imns.FIO.readTextFile(fileDescriptor)
-    );
-}
+// let arr = [2, 4, 7, 1, 9, 0, 3, 5, 6, 8];
+// console.log(arr.sort());
+// console.log(arr.reverse());
+// console.log(arr.find(item => item > 5));
+// console.log(arr.filter(item => item > 5));
+// console.log(arr.map(item => ++item));
+// console.log(arr.map(item => item/10));
+// let str = arr.join(",");
+// console.log(str);
+// console.log(str.split(",", 2))
+// console.log(arr.reduce((sum, item) => sum + item, 0));
+// let arrayLike = {
+//     0: "Hello",
+//     1: "World",
+//     length: 2
+//   };
+  
+//   let arr = Array.from(arrayLike);
+//   console.log(arr.pop());

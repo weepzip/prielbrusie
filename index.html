@@ -3,124 +3,463 @@
     <head>
         <meta charset="utf-8">
         <title>Приэльбрусье</title>
+        <!-- CSS only -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
         <link rel="stylesheet" href="style.css"/>
-        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+        <!-- <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
         integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
-        crossorigin=""/>
-
+        crossorigin=""/> -->
+        <link rel="stylesheet" href="plugins/leafletjs/leaflet.css"/>
+        <script src="https://code.jquery.com/jquery-3.0.0.min.js"></script>
         <script type="text/javascript" srs="main.js"></script>
         <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
-        <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+        <!-- <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
         integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
-        crossorigin=""></script>
+        crossorigin=""></script> -->
+        <script type="text/javascript" src="plugins/leafletjs/leaflet.js"></script>
+        <script type="text/javascript" src="plugins/leaflet-svgicon-master/svg-icon.js"></script>
+        <script type="text/javascript" src="plugins/fslightbox/fslightbox.js"></script>
     </head>
     <body>
-        <header>
+        <div id="popup-div">
+        </div>
+        <header title="prielbrusie">
+            <div class="head-name">
+                <h1 style="text-align: left; color: lightcyan; padding-left: 10px;">Приэльбрусье</h1>
+            </div>
         </header>
-
-        <div class="cg-map" title="cg-map">
+        <nav id="leftpart" title="Navigation container">
+            <div id="hotelInfo"></div>
+        </nav>
+        <div class="cg-map" title="Приэльбрусье">
             <div id="map">
                 <script type="text/javascript">
-                    var map = L.map('map').setView([43.255951, 42.512950], 15);
-                    L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+                    // Add layers
+                    let satelliteLayer = L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
                         attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
                         maxZoom: 18,
-                        id: 'mapbox/streets-v11',
+                        id: 'mapbox/satellite-streets-v11',
                         tileSize: 512,
                         zoomOffset: -1,
                         accessToken: 'pk.eyJ1Ijoid2VlcHppcCIsImEiOiJja3MxdnF1aTExeG51MzJzN2Y1N3g1cmZjIn0.VJciVUTVQGi_8_el9x2maQ'
-                    }).addTo(map);
-
-                    /*var marker = L.marker([43.255951, 42.512950]).addTo(map);*/
-
-                    var circle = L.circle([43.255951, 42.512950], {
-                        color: 'red',
-                        fillColor: '#f03',
-                        fillOpacity: 0.5,
-                        radius: 500
-                    }).addTo(map);
-
-                    var polygon = L.polygon([
-                        [43, 42],
-                        [42, 43],
-                        [43, 43]
-                    ]).addTo(map);
-
-                    /*marker.bindPopup("<b>Hello, World!</b><br>This's Terskol'")*/
-
-                    var popup = L.popup()
-
-                    function onMapClick(e) {
-                        popup
-                            .setLatLng(e.latlng)
-                            .setContent("You clicked the map at " + e.latlng)
-                            .openOn(map);
-                    }
-                    map.on('click', onMapClick);
-
-
-
-
-                    $.ajax({
-                        type: "GET",
-                        url: "hotels.json",
-                        dataType: "json",
-                        success: function(data) {processData(data);}
                     });
 
-                    function processData(allText) {
-                        var allTextLines = allText.split(/\r\n|\n/);
-                        var headers = allTextLines[0].split(';');
-                        var lines = [];
+                    let outdoorsLayer = L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+                        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+                        maxZoom: 18,
+                        id: 'mapbox/outdoors-v11',
+                        tileSize: 512,
+                        zoomOffset: -1,
+                        accessToken: 'pk.eyJ1Ijoid2VlcHppcCIsImEiOiJja3MxdnF1aTExeG51MzJzN2Y1N3g1cmZjIn0.VJciVUTVQGi_8_el9x2maQ'
+                    });
 
-                        for (var i = 1; i < allTextLines.length; i++){
-                            var data = allTextLines[i].split(';');
-                            if (data.length == header.length) {
-                                var tarr = [];
-                                for (var j = 0; j < headers.length; j++){
-                                    tarr.push(headers[j] + ":" + data[j])
-                                }
-                                lines.push(tarr);
+                    // Add map with layers
+                    let map = L.map('map',{
+                        zoom: 13,
+                        center: [43.255951, 42.512950],
+                        layers: [outdoorsLayer, satelliteLayer]
+                    });
+
+                    // create map layers
+                    let mapLayers = {
+                        "Outdoors": outdoorsLayer,
+                        "Satellite": satelliteLayer,
+                    };
+
+                    //create Markers layers
+                    let townMarkersLayer = L.layerGroup().addTo(map);
+                    let azauMarkersLayer = L.layerGroup().addTo(map);
+                    let chegetMarkersLayer = L.layerGroup().addTo(map);
+                    let mountainPeakMarkersLayer = L.layerGroup();
+                    let skiLiftTraceLayer = L.layerGroup();
+
+                    // create layers control
+                    let markersLayer = {
+                        "Поляна Азау": azauMarkersLayer,
+                        "Поляна Чегет": chegetMarkersLayer,
+                        "Отели в поселках": townMarkersLayer,
+                        "Вершины гор": mountainPeakMarkersLayer,
+                        "Подъемники": skiLiftTraceLayer,
+                    };
+
+                    // add layer control on map
+                    L.control.layers(mapLayers, markersLayer, {collapsed: true}).addTo(map);
+
+                    // JSON-file hotel info get request
+                    var hotelRequestURL = "parser/prielbrusie.json";
+                    var hotelRequest = new XMLHttpRequest();
+                    hotelRequest.open('GET', hotelRequestURL);
+                    hotelRequest.responseType = 'json';
+                    hotelRequest.send();
+                    hotelRequest.onload = function() {
+                        var hotelsData = hotelRequest.response;
+                        processData(hotelsData);
+                    };
+
+                    // JSON-file peaks info get request
+                    var peaksRequestURL = "parser/mountainpeaks.json"; // исправить ресурсы на гит
+                    var peaksRequest = new XMLHttpRequest();
+                    peaksRequest.open('GET', peaksRequestURL);
+                    peaksRequest.responseType = 'json';
+                    peaksRequest.send();
+                    peaksRequest.onload = function() {
+                        var peaksData = peaksRequest.response;
+                        drawPeaksMarkers(peaksData);
+                    };
+
+                    // Draw Mountain peaks on map
+                    function drawPeaksMarkers(peaksData){
+                        L.geoJSON(peaksData,{
+                            pointToLayer: function(feature,coordinates){
+                                let url = "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-grey.png";
+                                let peakMarker = L.marker(coordinates);
+                                peakMarker.bindPopup(feature.properties.name)
+                                          .on("mouseover", function(event){this.openPopup()})
+                                          .on("mouseout", function(event){this.closePopup()})
+                                          .setIcon(CreateMarkerIcon(url))
+                                          .addTo(mountainPeakMarkersLayer);
                             }
-                        }
-                        console.log(lines);
+                        })
+                        // for(let feature of peaksData.features){
+                        //     let url = "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-black.png";
+                        //     let peakMarker = L.marker(feature.geometry.coordinates);
+                        //     peakMarker.setIcon(CreateMarkerIcon(url));
+                        //     peakMarker.bindPopup(feature.properties.name);
+                        //     peakMarker.addTo(map);
+                        // }
+                    };
+
+                    // JSON-file ski lift info get request
+                    var skiLiftRequestURL = "parser/skilift.json";
+                    var skiLiftRequest = new XMLHttpRequest();
+                    skiLiftRequest.open('GET', skiLiftRequestURL);
+                    skiLiftRequest.responseType = 'json';
+                    skiLiftRequest.send();
+                    skiLiftRequest.onload = function() {
+                        var skiLiftData = skiLiftRequest.response;
+                        drawSkiLift(skiLiftData);
+                    };
+
+                    // Function for drawing ski lift
+                    function drawSkiLift(skiLiftData){
+                        for(let feature of skiLiftData.features){
+                            let lineColor = "black";
+                            if(feature.properties.place.includes("Азау")){
+                                lineColor = "gold";
+                            }else{
+                                lineColor = "green";
+                            }
+                            let latlngs = [];
+                            for(let coords of feature.geometry.coordinates){
+                                latlngs.push([coords[1], coords[0]]);
+                            }
+                            let polyline = L.polyline(latlngs,{color: `${lineColor}`})
+                                            .addTo(skiLiftTraceLayer);
+                            polyline.bindPopup(function(event){
+                                return createMapPopupContent(feature.properties.imageLink, 
+                                                             feature.properties.place, 
+                                                             feature.properties.type)
+                            })
+                                    // .on("mouseover", function(event){this.openPopup()})
+                                    // .on("mouseout", function(event){this.closePopup()})
+                        };
+                    };
+                    // Left container / hostel data loading function
+                    function loadLeftContainerHotelData(hotel, mapLayer, hotelID){
+                        // Create hotel data container
+                        let hotelDataContainer = document.createElement("div");
+                        hotelDataContainer.setAttribute("class", "hotel-data-container");
+                        hotelDataContainer.setAttribute("id", `hotel-${hotelID}`);
+                        hotelDataContainer.onmouseover = function(){
+                            hotelDataContainer.style.setProperty("border", "solid 2px darkmagenta")
+                        };
+                        hotelDataContainer.onmouseout = function(){
+                            hotelDataContainer.style.setProperty("border", "solid 1px darkblue")
+                        };
+                        hotelDataContainer.onclick = function(){onClickMarker(hotel)};
+
+                        // Create hotel preview image container
+                        let hotelPreviewImageContainer = document.createElement("div");
+                        hotelPreviewImageContainer.setAttribute("class", "hotel-preview-image-container");
+                        hotelDataContainer.append(hotelPreviewImageContainer);
+
+                        // Create hotel preview image
+                        let hotelPreviewImage = document.createElement("img");
+                        hotelPreviewImage.setAttribute("class", "hotel-preview-image")
+                        hotelPreviewImage.setAttribute("src", `${hotel.properties.imagePreviewLink}`)
+                        hotelPreviewImageContainer.append(hotelPreviewImage);
+
+                        // Create hotel content container
+                        let hotelContentContainer = document.createElement("div");
+                        hotelContentContainer.setAttribute("class", "hotel-content-container");
+                        hotelDataContainer.append(hotelContentContainer);
+
+                        // Create hotel content
+                        let hotelName = document.createElement("h5");
+                        hotelName.style.setProperty("margin", "0");
+                        hotelName.append(hotel.properties.name);
+                        hotelContentContainer.append(hotelName);
+
+                        let hotelPlace = document.createElement("p");
+                        hotelPlace.style.setProperty("margin", "0");
+                        hotelPlace.append(hotel.properties.place);
+                        hotelContentContainer.append(hotelPlace);
+
+                        let hotelAddress = document.createElement("p");
+                        hotelAddress.style.setProperty("margin", "0");
+                        hotelAddress.append(hotel.properties.address);
+                        hotelContentContainer.append(hotelAddress);
+
+                        // add link on marker
+                        let linkOnMarker = document.createElement("div");
+                        linkOnMarker.setAttribute("id", `hotel-${hotelID}-link`);
+                        let p = document.createElement("p");
+                        p.style.setProperty("margin", "0");
+                        p.style.setProperty("cursor", "pointer");
+                        p.append("На карте");
+                        linkOnMarker.append(p);
+                        let marker = mapLayer.getLayer(hotelID);
+
+                        marker.on('click', function(){
+                            hotelDataContainer.scrollIntoView();
+                            hotelDataContainer.style.setProperty("border", "solid 2px darkmagenta");
+                            hotelDataContainer.style.setProperty("background", "#a598e3")
+                            setTimeout(hightlightHotelBox, 1000);
+                            function hightlightHotelBox(){
+                                hotelDataContainer.style.setProperty("border", "solid 1px darkblue");
+                                hotelDataContainer.style.setProperty("background", "none")
+                            };
+                        });
+
+                        linkOnMarker.onclick = function(){
+                            map.setView(marker.getLatLng(), 16);
+                            marker.addTo(map).openPopup();
+                            event.stopPropagation();
+                        };
+
+                        linkOnMarker.style.setProperty("position", "absolute");
+                        linkOnMarker.style.setProperty("z-index", "2");
+                        linkOnMarker.style.setProperty("background", "blue");
+                        linkOnMarker.style.setProperty("border", "solid 1px darkblue")
+                        hotelDataContainer.append(linkOnMarker);
+
+                        return hotelDataContainer;
+                    };
+                    // map popup open function
+                    function createMapPopupContent(imageLink, title, content){
+                        let popup = document.createElement("div");
+
+                        // create container
+                        let mapPopupContainer = document.createElement("div");
+                        mapPopupContainer.setAttribute("class", "map-popup-container");
+                        popup.append(mapPopupContainer);
+
+                        // create image container
+                        let mapPopupImageContainer = document.createElement("div");
+                        mapPopupImageContainer.setAttribute("class", "map-popup-image-container");
+                        mapPopupContainer.append(mapPopupImageContainer);
+
+                        // create image
+                        let mapPopupImage = document.createElement("img");
+                        mapPopupImage.setAttribute("class", "map-popup-image");
+                        mapPopupImage.setAttribute("src", `${imageLink}`);
+                        mapPopupImageContainer.append(mapPopupImage);
+
+                        // create content container
+                        let mapPopupContentContainer = document.createElement("div");
+                        mapPopupContentContainer.setAttribute("class", "map-popup-content")
+                        mapPopupContainer.append(mapPopupContentContainer);
+
+                        // create content
+                        let h3 = document.createElement("h3");
+                        h3.style.setProperty("margin", "3 0 3 0px");
+                        h3.append(title);
+                        mapPopupContentContainer.append(h3);
+
+                        if(Array.isArray(content)){
+                            for(let elem of content){
+                                let p = document.createElement("p");
+                                p.style.setProperty("margin", "3 0 3 0px");
+                                p.append(elem);
+                                mapPopupContentContainer.append(p);
+                            }
+                        }else{
+                            let p = document.createElement("p");
+                            p.style.setProperty("margin", "3 0 3 0px");
+                            p.append(content);
+                            mapPopupContentContainer.append(p);
+                        };
+
+                        // let popupHTML = mapPopupContainer.innerHTML;
+                        return popup.innerHTML;
+                    }
+                    // Map setting, and layer control
+                    function processData(hotelsData){
+                        // Get page left part container
+                        let leftPart = document.getElementById("leftpart");
+                        leftPart.style.setProperty("overflow-y", "scroll");
+                        leftPart.innerHTML = "";
+
+                        // Create hotels data container
+                        let hotelsDataContainer = document.createElement("div");
+                        hotelsDataContainer.innerHTML = "";
+                        hotelsDataContainer.setAttribute("class", "hotels-data-container");
+                        leftPart.append(hotelsDataContainer);
+
+                        // GeoJSON 
+                        L.geoJSON(hotelsData,{
+                            pointToLayer: function(feature, coordinates){
+                                let hotelMarker = L.marker(coordinates)
+                                .bindPopup(function(event){return createMapPopupContent(feature.properties.imagePreviewLink, feature.properties.name, [feature.properties.place, feature.properties.address])})
+                                .on('mouseover', function(event){this.openPopup();})
+                                .on('mouseout', function(event){this.closePopup();});
+                                
+                                let iconMarkerUrl = "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-blue.png";
+                                switch(feature.properties.place){
+                                    case "поляна Азау":
+                                        iconMarkerUrl = "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-gold.png";
+                                        hotelMarker.setIcon(CreateMarkerIcon(iconMarkerUrl));
+                                        hotelMarker.addTo(azauMarkersLayer);
+                                        hotelsDataContainer.append(loadLeftContainerHotelData(feature, 
+                                                                                              azauMarkersLayer, 
+                                                                                              azauMarkersLayer.getLayerId(hotelMarker)));
+                                        break;
+                                    case "поляна Чегет":
+                                        iconMarkerUrl = "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-green.png";
+                                        hotelMarker.setIcon(CreateMarkerIcon(iconMarkerUrl));
+                                        hotelMarker.addTo(chegetMarkersLayer);
+                                        hotelsDataContainer.append(loadLeftContainerHotelData(feature, 
+                                                                                              chegetMarkersLayer, 
+                                                                                              chegetMarkersLayer.getLayerId(hotelMarker)));
+                                        break;
+                                    default:
+                                        hotelMarker.setIcon(CreateMarkerIcon(iconMarkerUrl));
+                                        hotelMarker.addTo(townMarkersLayer);
+                                        hotelsDataContainer.append(loadLeftContainerHotelData(feature, 
+                                                                                              townMarkersLayer, 
+                                                                                              townMarkersLayer.getLayerId(hotelMarker)));
+                                        break;
+                                };
+                            }
+                        });
+                    };
+
+                    function CreateMarkerIcon(url){
+                        return new L.Icon({
+                        iconUrl: url,
+                        shadowUrl: "plugins/leafletjs/images/marker-shadow.png",
+                        iconSize: [25, 41],
+                        iconAnchor: [12, 41],
+                        popupAnchor: [1, -34],
+                        shadowSize: [41, 41]
+                        });
                     }
 
-                    let markersList = [];
-                    markersList = [[43.259158, 42.502869, "Альпхаус"],
-                                [43.258687, 42.506394, "Седьмой регион"],
-                                [43.258089, 42.507231, "Маша и Медведи"],
-                                [3.257921, 42.509804, "Шахеризада"],
-                                [43.257626, 42.510379, "Гостевой дом на Эльбрусской 2"],
-                                [43.257201, 42.510537, "Эверест"]
-                              ];
+                    function onClickMarker(hotel){
+                        // Popup container for hotel information
+                        let popupDiv = document.getElementById("popup-div");
+                        popupDiv.innerHTML = "";
 
-                    for (var i = 0; i < markersList.length; i++) {
-                        hotelName = markersList[i][2];
-                        map.addLayer(new L.marker([markersList[i][0], markersList[i][1]])
-                            .bindPopup("<b>" + hotelName + "</b><br><a href='https:www.yandex.ru'>Я подсказка</a><br><img height='50px' width='50px' src='unnamed.png'/>"));
+                        // Popup header block
+                        let popupHeadBlock = document.createElement("div");
+                        popupHeadBlock.className = "popup-head-block";
+                        popupDiv.append(popupHeadBlock);
+
+                        // Popup header
+                        let popupHeader = document.createElement("div");
+                        popupHeader.className = "popup-header";
+                        popupHeader.style.float = "left";
+                        popupHeadBlock.append(popupHeader);
+
+                        // Hide hotel info button
+                        let exitButton = document.createElement("button");
+                        exitButton.id = "content-hide-button";
+                        exitButton.title = "Close";
+                        exitButton.style.maskImage = "images/x-square-fill.svg";
+                        exitButton.onclick = function(){contentExitFunction(popupDiv)};
+                        popupHeadBlock.append(exitButton);
+
+                        // Hide button image
+                        let exitButtonImage = document.createElement("img");
+                        exitButtonImage.src = "images/x-square-fill.svg";
+                        exitButtonImage.style.height = "30px";
+                        exitButtonImage.style.width = "30px";
+                        exitButton.append(exitButtonImage);
+
+                        // Content container
+                        let contentDiv = document.createElement('div');
+                        contentDiv.className = "content-div";
+                        popupDiv.append(contentDiv);
+
+                        // Image content container
+                        let imageContentDiv = document.createElement("div");
+                        imageContentDiv.className = "image-content";
+                        contentDiv.append(imageContentDiv);
+
+                        // Preview Image container
+                        let divImagePreview = document.createElement('div');
+                        divImagePreview.className = "preview-image";
+                        divImagePreview.style.backgroundImage = `url('${hotel.properties.imagePreviewLink}')`;
+                        imageContentDiv.append(divImagePreview);
+
+                        // Hotel content container
+                        let hotelContent = document.createElement('div');
+                        hotelContent.className = "hotel-content";
+                        contentDiv.append(hotelContent);
+
+                        // Hotel name
+                        let h1 = document.createElement('h1');
+                        h1.append(hotel.properties.name);
+                        popupHeader.append(h1)
+
+                        // Hotel description information
+                        hotel.properties.description.forEach(desc=>{
+                            let p = document.createElement('p');
+                            p.append(desc);
+                            hotelContent.append(p);
+                        });
+
+                        // Image gallery container
+                        let galleryDiv = document.createElement("div");
+                        galleryDiv.className = "gallery";
+                        imageContentDiv.append(galleryDiv);
+
+                        // gallery image previews
+                        for(let i=0; i < 6; i++){
+                            // gallery image preview container
+                            let galleryImagePreviewDiv = document.createElement("div")
+                            galleryImagePreviewDiv.className = "gallery-image-prewiew-container";
+                            galleryImagePreviewDiv.style.float = "left";
+                            galleryDiv.append(galleryImagePreviewDiv);
+
+                            //gallery image preview link
+                            let galleryImagePreviewLink = document.createElement("a");
+                            galleryImagePreviewLink.className = "lightview";
+                            galleryImagePreviewLink.setAttribute("data-fslightbox", "gallery");
+                            galleryImagePreviewLink.href = `${hotel.properties.imageLinks[i]}`;
+                            galleryImagePreviewLink.src = `${hotel.properties.imageLinks[i]}`;
+                            galleryImagePreviewDiv.append(galleryImagePreviewLink);
+                            
+                            // gallery image preview
+                            let galleryImagePreview = document.createElement("img");
+                            galleryImagePreview.className = "gallery-image-preview";
+                            galleryImagePreview.src = `${hotel.properties.imageLinks[i]}`;
+                            galleryImagePreviewLink.append(galleryImagePreview);
+                            refreshFsLightbox();
+                        };
+                        // Get hotel info popup visible
+                        popupDiv.style.visibility = "visible";
+                    };
+
+                    function contentExitFunction(element){
+                        element.style.visibility = "hidden";
                     };
                 </script>
 
             </div>
         </div>
-        <nav>
-            <!--<div class="block1">
-            <h1>Заголовок</h1>
-            <p>Текст</p>
-            </div>
-            <div class="block1">
-            <h1>Заголовок</h1>
-            <p>Текст</p>
-            </div>
-            <div class="block1">
-            <h1>Заголовок</h1>
-            <p>Текст</p>
-            </div> -->
-        </nav>
-
-        <footer>
-            <p><small>&#169 Сopyright Все права защищены Автор: Владислав Корякин</small></p>
+        <footer title="Footer">
+            <p style="margin: 0px;"><small>&#169 Сopyright Все права защищены Автор: Владислав Корякин</small></p>
         </footer>
     </body>
 </html>
