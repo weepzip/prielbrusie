@@ -86,7 +86,7 @@
                     L.control.layers(mapLayers, markersLayer, {collapsed: true}).addTo(map);
 
                     // JSON-file hotel info get request
-                    var hotelRequestURL = "parser/prielbrusie.json";
+                    var hotelRequestURL = "https://raw.githubusercontent.com/weepzip/prielbrusie/main/parser/prielbrusie.json";
                     var hotelRequest = new XMLHttpRequest();
                     hotelRequest.open('GET', hotelRequestURL);
                     hotelRequest.responseType = 'json';
@@ -97,7 +97,7 @@
                     };
 
                     // JSON-file peaks info get request
-                    var peaksRequestURL = "parser/mountainpeaks.json"; // исправить ресурсы на гит
+                    var peaksRequestURL = "https://raw.githubusercontent.com/weepzip/prielbrusie/main/parser/mountainpeaks.json"; // исправить ресурсы на гит
                     var peaksRequest = new XMLHttpRequest();
                     peaksRequest.open('GET', peaksRequestURL);
                     peaksRequest.responseType = 'json';
@@ -130,7 +130,7 @@
                     };
 
                     // JSON-file ski lift info get request
-                    var skiLiftRequestURL = "parser/skilift.json";
+                    var skiLiftRequestURL = "https://raw.githubusercontent.com/weepzip/prielbrusie/main/parser/skilift.json";
                     var skiLiftRequest = new XMLHttpRequest();
                     skiLiftRequest.open('GET', skiLiftRequestURL);
                     skiLiftRequest.responseType = 'json';
